@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1120" viewBox="0 0 900 1120">
+<defs>
+<linearGradient id="wall" x2="1" y2="1"><stop stop-color="#e9d9bc"/><stop offset="1" stop-color="#b9966f"/></linearGradient>
+<linearGradient id="arch" x2=".8" y2="1"><stop stop-color="#a57c54"/><stop offset=".65" stop-color="#ceb28a"/><stop offset="1" stop-color="#ddc7a4"/></linearGradient>
+<linearGradient id="bottle" x2="1" y2=".3"><stop stop-color="#35261b"/><stop offset=".4" stop-color="#906238"/><stop offset=".6" stop-color="#ba8950"/><stop offset="1" stop-color="#402a1a"/></linearGradient>
+<linearGradient id="stone" x2=".3" y2="1"><stop stop-color="#676252"/><stop offset="1" stop-color="#242921"/></linearGradient>
+<linearGradient id="cloth" x2=".8" y2="1"><stop stop-color="#fff4dd"/><stop offset="1" stop-color="#c5ac85"/></linearGradient>
+<radialGradient id="light"><stop stop-color="#fff5d8" stop-opacity=".75"/><stop offset="1" stop-color="#fff5d8" stop-opacity="0"/></radialGradient>
+<filter id="shadow"><feGaussianBlur stdDeviation="14"/></filter>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".08"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+<pattern id="weave" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 1H6M1 0V6" stroke="#937e5d" opacity=".16" stroke-width=".7"/></pattern>
+</defs>
+<g filter="url(#grain)">
+<path fill="url(#wall)" d="M0 0H900V1120H0z"/>
+<path d="M154 935V382a296 296 0 0 1 592 0v553" fill="none" stroke="#e8d6b7" stroke-width="44"/>
+<path d="M176 920V382a274 274 0 0 1 548 0v538Z" fill="url(#arch)"/>
+<ellipse cx="305" cy="319" rx="302" ry="401" fill="url(#light)"/>
+<path d="M176 780L724 230V379L176 931z" fill="#f9e8c4" opacity=".23"/>
+<path d="M724 0h176v1120H724z" fill="#6e543c" opacity=".08"/>
+<path d="M0 908h900v212H0z" fill="#c3a27b"/>
+<path d="M0 908h900" stroke="#ebd7b6" stroke-width="4"/>
+<ellipse cx="466" cy="969" rx="293" ry="40" fill="#5c432c" opacity=".3" filter="url(#shadow)"/>
+<path d="M74 959h546l100 84H27z" fill="#dcc5a0"/>
+<path d="M74 959h546l100 84H27z" fill="url(#weave)"/>
+<!-- folded linen -->
+<path d="M423 823l221-12 81 45-5 105-290 9-33-50z" fill="url(#cloth)"/>
+<path d="M423 823l25 44 277-11-81-45z" fill="#f4e3c7"/>
+<path d="M430 886l286-10M431 904l285-8M431 922l284-7M432 940l283-7" stroke="#b89b72" opacity=".5"/>
+<path d="M423 823l221-12 81 45-5 105-290 9-33-50z" fill="url(#weave)"/>
+<!-- amber oil bottle -->
+<rect x="263" y="645" width="99" height="246" rx="25" fill="url(#bottle)"/>
+<path d="M281 650v-37q30-16 63 0v37" fill="#473525"/>
+<rect x="277" y="588" width="72" height="47" rx="4" fill="#302d24"/>
+<path d="M286 589v46m10-46v46m10-46v46m10-46v46m10-46v46m10-46v46" stroke="#84714f" opacity=".5"/>
+<rect x="269" y="722" width="87" height="104" fill="#e9d8b5"/>
+<path d="M295 764l17-25 17 25-17 25zM298 764h28" fill="none" stroke="#846445" stroke-width="1.5"/>
+<path d="M287 803h50m-42 7h34" stroke="#846445" stroke-width="2"/>
+<path d="M279 672v38" stroke="#ead09b" opacity=".5" stroke-width="5" stroke-linecap="round"/>
+<!-- balanced basalt -->
+<ellipse cx="467" cy="955" rx="94" ry="38" fill="url(#stone)" transform="rotate(-5 467 955)"/>
+<ellipse cx="475" cy="912" rx="78" ry="30" fill="url(#stone)" transform="rotate(6 475 912)"/>
+<ellipse cx="466" cy="879" rx="55" ry="24" fill="url(#stone)" transform="rotate(-9 466 879)"/>
+<path d="M444 870q21-10 39-3M435 902q40-15 74-1M410 945q44-14 73-9" stroke="#a8a18d" opacity=".3" fill="none" stroke-width="3"/>
+<!-- botanical silhouette -->
+<g stroke="#5b6040" fill="#777b52" stroke-width="3">
+<path d="M731 952q-36-229 52-423" fill="none"/>
+<path d="M755 752q-85-98-84-169 65 30 84 169M752 757q100-46 109-126-78 19-109 126M769 640q-59-80-28-145 35 46 28 145M740 851q-79-43-103-110 75 4 103 110M742 861q80-16 103-75-60-5-103 75M779 562q67-41 67-112-57 25-67 112"/>
+</g>
+<path d="M653 1000h162l-20-111H672z" fill="#9e7850"/>
+<ellipse cx="734" cy="889" rx="62" ry="14" fill="#755537"/>
+<path d="M665 904h138m-131 12h126m-119 12h111" stroke="#d0ad7e" opacity=".4"/>
+</g></svg>
