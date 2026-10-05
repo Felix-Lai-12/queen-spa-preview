@@ -18,7 +18,7 @@ body{background:var(--paper);color:var(--ink)}
 @media(max-width:600px){.header{gap:12px;height:auto;min-height:96px;padding:16px 24px}.header .brand{max-width:calc(100% - 116px);flex:1}.brand strong{font-size:20px}.header .locale-control{margin:0}.header .menu-toggle{display:none}.header nav{display:none}.hero h1{font-size:42px}.hero-copy{padding:28px 24px}.hero-copy .intro{font-size:16px}.hero-art{height:272px;min-height:0}.scene-missing{min-height:272px;height:272px;padding:24px}.scene-missing .scene-name{font-size:26px}.scene-missing p{font-size:16px}.hero .helper{font-size:12px}.treatment-list .treatment{display:flex;gap:16px}.treatment h3{font-size:26px}.treatment-choice{padding-top:16px}.treatment-list{display:block}.room-gallery{display:grid;grid-template-columns:1fr}.room-gallery img{height:auto;max-height:480px;object-fit:contain}.booking-header{padding:24px}.booking-header h2{margin-top:24px;font-size:26px}.booking-content{padding:24px}.booking-actions{padding:16px 24px}.booking-progress{gap:8px;padding:12px 24px}.booking-progress li{min-width:0}.booking-step .preview-summary{font-size:20px}.mobile-booking>span{font-size:12px;max-width:42%;overflow-wrap:anywhere}.mobile-booking{padding-bottom:calc(12px + env(safe-area-inset-bottom));gap:8px}.mobile-booking .button{font-size:14px;padding:12px;gap:8px}.visit iframe{min-height:320px}.admin-panel{padding:24px}.admin-top h1{font-size:32px;flex-basis:100%}.admin-section h2{font-size:28px}.request-row{padding:16px}.request-row label{display:grid}.overview{padding:24px}.overview h1{font-size:42px}.shop-grid{grid-template-columns:1fr}.overview-controls>*{width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .branch-control{display:grid;gap:8px;max-width:100%;min-width:0;margin:18px 0;font-size:14px;font-weight:600}
-main>.branch-control{margin:24px auto;max-width:calc(100% - 48px);width:1280px}
+
 .branch-control select,#branch-filter{width:100%;max-width:100%;min-width:0;padding:12px;background:var(--shop-paper);color:var(--shop-ink);border:1px solid currentColor;border-radius:4px;font:inherit;text-overflow:ellipsis}
 #branch-map{height:360px;width:100%;z-index:0;background:#e9e6dd;color:#222;border-radius:4px}
 #branch-map .leaflet-control a{color:#222}#branch-map .leaflet-control-attribution{color:#222;max-width:100%;font-size:12px;overflow-wrap:anywhere}
@@ -33,4 +33,11 @@ main>.branch-control{margin:24px auto;max-width:calc(100% - 48px);width:1280px}
 .public-sample-note{font:12px/1.6 var(--sans);border-left:3px solid var(--accent);padding:10px 12px;margin-bottom:20px;overflow-wrap:anywhere}
 
 /* Map fallback text sits on the dark visit panel. Use its existing light token. */
+.visit #map-status{color:var(--paper)}
+
+/* v11: location choices belong with addresses and inquiry details. */
+.booking-location{display:grid;gap:8px;margin:0 0 16px;padding:0 0 16px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.booking-location strong{font-weight:600}.booking-location span{display:block}
+.visit #branch-list>h3{font-size:24px;margin:24px 0 12px;color:var(--paper)}.visit #branch-list>p{font-size:14px;color:var(--paper)}
+.branch-list-item [data-selected-location]{font-weight:700}.branch-list-item:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 .visit #map-status{color:var(--paper)}
