@@ -115,7 +115,7 @@ function renderServices(){
  D.services.forEach((service,i)=>{
   if(options){const option=new Option(label(i),String(i));option.dataset.service=String(i);options.add(option);}
   if(list){const row=document.createElement('article');row.className='treatment';const copy=document.createElement('div');copy.className='treatment-copy';const number=document.createElement('p');number.className='service-number';number.textContent=String(i+1).padStart(2,'0');const h=document.createElement('h3');h.dataset.service=i;h.textContent=label(i);const note=document.createElement('p');note.textContent=priceText(service);if(service.price!=null)note.className='treatment-price';copy.append(number,h,note);/*treatment-photos-v1*/if(service.photo){const fig=document.createElement('figure');fig.className='treatment-pic';const im=document.createElement('img');im.src=service.photo.src;im.alt=label(i);im.loading='lazy';im.decoding='async';im.width=800;im.height=600;fig.append(im);if(service.photo.kind==='stock'){const tag=document.createElement('span');tag.textContent=({vi:'Ảnh minh họa',en:'Illustrative photo','zh-Hant':'示意圖',ko:'예시 이미지'})[lang]||'Ảnh minh họa';fig.append(tag);}copy.prepend(fig);}const choice=document.createElement('div');choice.className='treatment-choice';const button=document.createElement('button');button.className='treatment-book';button.dataset.book=i;button.textContent=t('inquiry')+' →';choice.append(button);row.append(copy,choice);list.append(row);}
- });
+ });/*full-menu-v1*/if(list){let m=document.querySelector('.full-menu');const u=B.menuUrl||D.menuUrl;if(u){if(!m){m=document.createElement('p');m.className='full-menu';list.after(m);}const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener noreferrer';a.textContent=({vi:'Xem bảng giá đầy đủ trên website của spa',en:'See the full menu on the spa’s website','zh-Hant':'完整價目表請見官網',ko:'전체 메뉴는 공식 웹사이트에서 확인하세요'})[lang]+' ↗';m.replaceChildren(a);}else if(m)m.remove();}
  if(admin){
   all('[data-edit-service]').forEach(el=>el.closest('label').remove());
   D.services.forEach((service,i)=>{const labelEl=document.createElement('label');labelEl.textContent=t('treatment')+' '+(i+1);const input=document.createElement('input');input.dataset.editService=i;input.maxLength=140;input.required=true;input.value=label(i);labelEl.append(input);$('#editor').insertBefore(labelEl,$('#editor button'));});
@@ -245,4 +245,23 @@ window.SpaPreview={key,prefix,read:()=>structuredClone(state),locale:lang,shopId
 window.PreviewLoadGate.ready();
 })();
 
-/*layout-v1*/(function(){const SEL="h1,h2,h3,h4,p,li,figcaption,.contact-link,.button",CJK=/[\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]/;function glue(el){const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let last=null,n;while(n=w.nextNode())if(n.data.trim())last=n;if(!last)return;const s=last.data.replace(/\s+$/,"");if(CJK.test(s.slice(-1))){if(s.length>1&&s.slice(-2,-1)!=="\u2060"&&CJK.test(s.slice(-2,-1)))last.data=s.slice(0,-1)+"\u2060"+s.slice(-1)+last.data.slice(s.length);return;}const m=/(\s+)(\S+)$/.exec(s);if(!m||m[1]!==" "||m[2].length>12||m.index===0)return;last.data=s.slice(0,m.index)+"\u00a0"+m[2]+last.data.slice(s.length);}let busy=false;function run(){if(busy)return;busy=true;document.querySelectorAll(SEL).forEach(glue);busy=false;}let t=null;new MutationObserver(()=>{if(busy)return;clearTimeout(t);t=setTimeout(run,60);}).observe(document.body,{childList:true,subtree:true,characterData:true});run();})();
+/*layout-v1*/(function(){
+const SEL="h1,h2,h3,h4,p,li,figcaption,.contact-link,.button",HEADS="h1,h2,h3,h4",CJK=/[　-鿿가-힯＀-￯]/;
+function glue(el){const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let last=null,n;while(n=w.nextNode())if(n.data.trim())last=n;if(!last)return;
+ const s=last.data.replace(/\s+$/,"");
+ if(CJK.test(s.slice(-1))){if(s.length>1&&s.slice(-2,-1)!=="⁠"&&CJK.test(s.slice(-2,-1)))last.data=s.slice(0,-1)+"⁠"+s.slice(-1)+last.data.slice(s.length);return;}
+ const m=/(\s+)(\S+)$/.exec(s);if(!m||m[1]!==" "||m[2].length>12||m.index===0)return;
+ // the glued pair must not split at a hyphen either ("4-in-1 massage" would break as "4-in-" / "1 massage")
+ const head=s.slice(0,m.index),p=head.lastIndexOf(" ")+1;
+ last.data=head.slice(0,p)+head.slice(p).replace(/-/g,"‑")+" "+m[2].replace(/-/g,"‑")+last.data.slice(s.length);}
+// a line holding one word (or one CJK character) when the element spans several lines
+function lone(el){const r=document.createRange(),w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),tops=[];let n;
+ while(n=w.nextNode()){const re=/[㐀-鿿]|[^\s ⁠㐀-鿿]+/g;let m;while(m=re.exec(n.data)){r.setStart(n,m.index);r.setEnd(n,m.index+m[0].length);const q=r.getClientRects();if(q.length)tops.push(Math.round(q[q.length-1].top));}}
+ const c={};let k=null;for(const t of tops){if(k===null||Math.abs(t-k)>4)k=t;c[k]=(c[k]||0)+1;}const v=Object.values(c);return v.length>1&&v.some(x=>x===1);}
+// headings that still leave one word alone get a slightly smaller size (down to 75%) so the line fits
+function fit(el){if(!el.offsetParent)return;el.style.fontSize="";if(!lone(el))return;const base=parseFloat(getComputedStyle(el).fontSize);
+ for(let f=base-1;f>=base*.75;f-=1){el.style.fontSize=f+"px";if(!lone(el))return;}el.style.fontSize="";}
+let busy=false;function run(){if(busy)return;busy=true;document.querySelectorAll(SEL).forEach(glue);document.querySelectorAll(HEADS).forEach(fit);busy=false;}
+let t=null;const later=()=>{clearTimeout(t);t=setTimeout(run,60);};
+new MutationObserver(()=>{if(!busy)later();}).observe(document.body,{childList:true,subtree:true,characterData:true});
+addEventListener("resize",later);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(later);run();})();
