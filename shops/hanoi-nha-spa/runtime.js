@@ -3,6 +3,7 @@
 if (!window.PreviewLoadGate || !window.PreviewLoadGate.canStart()) { window.PreviewLoadGate?.fail('data-or-dependency-unavailable'); return; }
 document.documentElement.classList.add('js');
 const D=window.ShopData,lang=document.documentElement.lang,admin=document.body.dataset.surface==='admin';
+/*map-photos-v1*/const SHOP_PHOTOS=D.photos||[];D.branches.forEach(b=>{if(!(b.photos&&b.photos.length))b.photos=SHOP_PHOTOS;});
 const prefix=`spa100:${D.id}:v1:`,key=prefix+'state',draftKey=prefix+'booking-draft';
 const t=k=>D.ui[k]?.[lang]||D.ui[k]?.en||k;
 /*prices-v1*/
@@ -163,7 +164,7 @@ function initMap(){
  let mapMode='all';const leaders=L.layerGroup().addTo(map);
  function arrange(){leaders.clearLayers();const occupied=[];pins.forEach((b,i)=>{const point=map.latLngToContainerPoint(b.coordinates);let x=point.x,y=point.y;for(let n=0;n<24&&occupied.some(p=>Math.hypot(p.x-x,p.y-y)<38);n++){const angle=n*Math.PI/4,radius=40+Math.floor(n/8)*20;x=point.x+Math.cos(angle)*radius;y=point.y+Math.sin(angle)*radius;}occupied.push({x,y});markers.get(b.id).setIcon(icon(i,b.id===B.id,x-point.x,y-point.y));if(Math.hypot(x-point.x,y-point.y)>1){L.polyline([b.coordinates,map.containerPointToLatLng([x,y])],{color:'#254c38',weight:2,interactive:false}).addTo(leaders);L.circleMarker(b.coordinates,{radius:3,color:'#254c38',fillColor:'#fff',fillOpacity:1,interactive:false}).addTo(leaders);}});}
  map.on('moveend zoomend',arrange);
- function fit(){mapMode='all';if(pins.length)map.fitBounds(L.latLngBounds(pins.map(b=>b.coordinates)),{padding:[52,52],maxZoom:16});else map.setView([16,107],5);arrange();}
+ function fit(){mapMode='all';if(pins.length)map.fitBounds(L.latLngBounds(pins.map(b=>b.coordinates)),{padding:[52,52],maxZoom:16});else if(B.areaCenter)map.setView(B.areaCenter,B.areaLevel==='street'?16:13);else map.setView([16,107],5);arrange();}
  function select(id){mapMode='selected';const b=D.branches.find(v=>v.id===id);pins.forEach((p,i)=>markers.get(p.id).setIcon(icon(i,p.id===id)));if(b?.coordinates){map.setView(b.coordinates,16);markers.get(id).openPopup();arrange();}else{$('#map-status').textContent=t('pinMissing');fit();}}
  fit();$('#fit-all')?.addEventListener('click',fit);if(!pins.length)$('#map-status').textContent=t('pinMissing');
  const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'});
