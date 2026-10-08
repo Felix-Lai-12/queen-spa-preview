@@ -121,3 +121,5 @@ html:not(.js) .google-map{display:none!important}
 
 /* Find us: the map card contains only the interactive embed. */
 .visit .verified-location{padding:0}.visit .google-map{margin:0}
+
+/*prices-v1*/.treatment-copy>p.treatment-price{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}.sample-price-note{font-size:12px;color:var(--muted);margin-top:24px;max-width:85ch;line-height:1.6}

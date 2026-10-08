@@ -5,6 +5,16 @@ document.documentElement.classList.add('js');
 const D=window.ShopData,lang=document.documentElement.lang,admin=document.body.dataset.surface==='admin';
 const prefix=`spa100:${D.id}:v1:`,key=prefix+'state',draftKey=prefix+'booking-draft';
 const t=k=>D.ui[k]?.[lang]||D.ui[k]?.en||k;
+/*prices-v1*/
+const PX={from:{en:'From ',vi:'Từ ','zh-Hant':'',ko:''},fromSuffix:{en:'',vi:'','zh-Hant':' 起',ko:'부터'},min:{en:' min',vi:' phút','zh-Hant':' 分鐘',ko:'분'},
+ sample:{en:'Sample demo: all content, including prices, is example data based on the official website. Please confirm with the spa before visiting.',vi:'Bản mẫu: mọi nội dung, kể cả giá, đều là dữ liệu ví dụ dựa trên website chính thức. Vui lòng xác nhận với spa trước khi đến.','zh-Hant':'示範網站：所有內容（含價格）皆為範例資料，參考自官方網站；到訪前請向店家確認。',ko:'샘플 데모: 가격을 포함한 모든 내용은 공식 웹사이트를 참고한 예시 데이터입니다. 방문 전 스파에 확인해 주세요.'},
+ sampleShort:{en:'Example prices · sample data',vi:'Giá ví dụ · dữ liệu mẫu','zh-Hant':'價格為範例・資料皆為範例',ko:'예시 가격 · 샘플 데이터'}};
+const px=k=>PX[k][lang]??PX[k].en;
+const hasPrices=()=>D.services.some(s=>s.price!=null);
+function money(s){const n=Number(s.price);return s.currency==='USD'?'US$'+n.toLocaleString('en-US'):n.toLocaleString(lang==='vi'?'vi-VN':'en-US')+' ₫';}
+function priceText(s){if(!s||s.price==null)return t('price');const m=money(s);return (s.kind==='from'?px('from')+m+px('fromSuffix'):m)+(s.durationMin?' · '+s.durationMin+px('min'):'');}
+const sp=i=>D.services[i]?.price!=null?' ('+priceText(D.services[i])+')':'';
+
 const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 let requested=new URL(location.href).searchParams.get('branch');
 try{requested ||= localStorage.getItem(prefix+'selected-branch');}catch(e){}
@@ -67,9 +77,9 @@ function summary(){
   const saved=state.bookings.find(b=>b.id===bookingId);
   if(!saved)return t('savedRequestMissing');
   const branch=saved.branchSnapshot?`${saved.branchSnapshot.name} · ${saved.branchSnapshot.address}`:t('branchSnapshotUnknown');
-  return `${branch} · ${saved.serviceLabels?.[lang]||saved.serviceName} · ${saved.guests} · ${saved.date} · ${saved.time} (GMT+7)`;
+  return `${branch} · ${saved.serviceLabels?.[lang]||saved.serviceName}${sp(Number($('#book-treatment').value))} · ${saved.guests} · ${saved.date} · ${saved.time} (GMT+7)`;
  }
- const s=draft();return `${B.name} · ${B.address} · ${label(Number(s.service))} · ${s.guests} · ${s.date} · ${s.time} (GMT+7)`;
+ const s=draft();return `${B.name} · ${B.address} · ${label(Number(s.service))}${sp(Number(s.service))} · ${s.guests} · ${s.date} · ${s.time} (GMT+7)`;
 }
 function updateSummaries(){const text=summary();$('#review-summary').textContent=text;$('#final-summary').textContent=text;}
 function showStep(n){step=n;dialog.dataset.step=String(n);all('.booking-step').forEach(e=>e.hidden=Number(e.dataset.step)!==n);all('[data-progress]').forEach(e=>{e.removeAttribute('aria-current');if(Number(e.dataset.progress)===n)e.setAttribute('aria-current','step');});$('#booking-back').hidden=n===0||n===3;$('#booking-next').textContent=t(n===2?'save':n===3?'done':'next');updateSummaries();$('#step-error').textContent='';$('.booking-step:not([hidden]) h3').focus();persistDraft();}
@@ -98,10 +108,10 @@ if(dialog){
  try{const saved=JSON.parse(sessionStorage.getItem(draftKey)||'null');if(saved&&saved.step>=0&&saved.step<=3){if(saved.branchId&&D.branches.some(b=>b.id===saved.branchId))selectBranch(saved.branchId,false);for(const field of ['service','date','time','guests'])$(field==='service'?'#book-treatment':'#book-'+field).value=saved[field]||'';bookingId=saved.bookingId;dialog.showModal();showStep(saved.step);}}catch(e){}
 }
 function renderServices(){
- const list=$('.treatment-list'),options=$('#book-treatment');if(list)list.replaceChildren();if(options)options.replaceChildren();
+ const list=$('.treatment-list'),options=$('#book-treatment');if(list)list.replaceChildren();if(list&&hasPrices()){let n=$('.sample-price-note');if(!n){n=document.createElement('p');n.className='sample-price-note';list.after(n);}n.textContent=px('sample');all('p').forEach(p=>{if(p.textContent.trim()===t('price')&&!p.closest('.treatment-list'))p.textContent=px('sampleShort');});}if(options)options.replaceChildren();
  D.services.forEach((service,i)=>{
   if(options){const option=new Option(label(i),String(i));option.dataset.service=String(i);options.add(option);}
-  if(list){const row=document.createElement('article');row.className='treatment';const copy=document.createElement('div');copy.className='treatment-copy';const number=document.createElement('p');number.className='service-number';number.textContent=String(i+1).padStart(2,'0');const h=document.createElement('h3');h.dataset.service=i;h.textContent=label(i);const note=document.createElement('p');note.textContent=t('price');copy.append(number,h,note);const choice=document.createElement('div');choice.className='treatment-choice';const button=document.createElement('button');button.className='treatment-book';button.dataset.book=i;button.textContent=t('inquiry')+' →';choice.append(button);row.append(copy,choice);list.append(row);}
+  if(list){const row=document.createElement('article');row.className='treatment';const copy=document.createElement('div');copy.className='treatment-copy';const number=document.createElement('p');number.className='service-number';number.textContent=String(i+1).padStart(2,'0');const h=document.createElement('h3');h.dataset.service=i;h.textContent=label(i);const note=document.createElement('p');note.textContent=priceText(service);if(service.price!=null)note.className='treatment-price';copy.append(number,h,note);const choice=document.createElement('div');choice.className='treatment-choice';const button=document.createElement('button');button.className='treatment-book';button.dataset.book=i;button.textContent=t('inquiry')+' →';choice.append(button);row.append(copy,choice);list.append(row);}
  });
  if(admin){
   all('[data-edit-service]').forEach(el=>el.closest('label').remove());
