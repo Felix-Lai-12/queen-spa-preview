@@ -131,7 +131,7 @@ function renderBranch(){
  all('[data-branch-name]').forEach(e=>e.textContent=B.name);
  all('[data-branch-address]').forEach(e=>e.textContent=B.address);
  all('[data-branch-availability]').forEach(e=>{e.textContent=locationStatus(B);e.hidden=!e.textContent;});
- all('[data-branch-contacts]').forEach(el=>{el.replaceChildren();const add=(href,text)=>{if(!href)return;const a=document.createElement('a');a.className='contact-link';a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;el.append(a);};add(B.source,t('official'));add(B.email?'mailto:'+B.email:null,t('email')+' · '+t(B.emailScope==='branch'?'branchContact':'publishedContact'));const group=/group|brand_contact/.test(B.whatsappScope),shared=/shared_hoi_an/.test(B.whatsappScope);add(B.whatsapp,'WhatsApp · '+t(shared?'sharedContact':group?'groupContact':'branchContact'));});
+ all('[data-branch-contacts]').forEach(el=>{el.replaceChildren();const add=(href,text)=>{if(!href)return;const a=document.createElement('a');a.className='contact-link';a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;el.append(a);};add(B.source,t('official'));add(B.email?'mailto:'+B.email:null,t('email'));add(B.whatsapp,'WhatsApp');});
  all('[data-branch-list-id]').forEach(e=>{const selected=e.dataset.branchListId===B.id;e.setAttribute('aria-pressed',String(selected));const label=e.querySelector('[data-selected-location]');if(label){label.textContent=t('selectedLocation');label.hidden=!selected;}});
 }
 function selectBranch(id,focusMap=true){
@@ -216,3 +216,5 @@ setupMap();
 render();
 window.SpaPreview={key,prefix,read:()=>structuredClone(state),locale:lang,shopId:D.id,branch:()=>structuredClone(B),locations:()=>structuredClone(locations)};
 })();
+
+/*layout-v1*/(function(){const SEL="h1,h2,h3,h4,p,li,figcaption,.contact-link,.button",CJK=/[\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]/;function glue(el){const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let last=null,n;while(n=w.nextNode())if(n.data.trim())last=n;if(!last)return;const s=last.data.replace(/\s+$/,"");if(CJK.test(s.slice(-1))){if(s.length>1&&s.slice(-2,-1)!=="\u2060"&&CJK.test(s.slice(-2,-1)))last.data=s.slice(0,-1)+"\u2060"+s.slice(-1)+last.data.slice(s.length);return;}const m=/(\s+)(\S+)$/.exec(s);if(!m||m[1]!==" "||m[2].length>12||m.index===0)return;last.data=s.slice(0,m.index)+"\u00a0"+m[2]+last.data.slice(s.length);}let busy=false;function run(){if(busy)return;busy=true;document.querySelectorAll(SEL).forEach(glue);busy=false;}let t=null;new MutationObserver(()=>{if(busy)return;clearTimeout(t);t=setTimeout(run,60);}).observe(document.body,{childList:true,subtree:true,characterData:true});run();})();
