@@ -1,0 +1,8 @@
+{
+  // Static demo site served by Cloudflare Workers assets; per-shop URLs come from _redirects.
+  "name": "spa-preview",
+  "compatibility_date": "2026-10-06",
+  "assets": {
+    "directory": "."
+  }
+}
